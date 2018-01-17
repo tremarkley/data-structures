@@ -25,6 +25,6 @@ var queueMethods = {
   size: function() {
     return this.count;
   }
-}
+};
 
 
