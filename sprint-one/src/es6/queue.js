@@ -9,11 +9,18 @@ class Queue {
   }
 
   dequeue() {
-
+    if (this.count > 0) {
+      this.count--;
+      let returnVal = this.storage[this.currentIndex];
+      this.currentIndex++;
+      return returnVal;
+    }
   }
 
   enqueue(value) {
-
+    this.count++;
+    this.storage[this.lastIndex] = value;
+    this.lastIndex++;
   }
 
   size() {
