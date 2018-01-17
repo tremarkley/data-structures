@@ -1,5 +1,5 @@
 var Stack = function() {
-  var obj= {
+  var obj = {
     storage: {},
     count: 0,
     currentIndex: 0
