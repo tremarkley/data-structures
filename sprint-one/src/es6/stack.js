@@ -6,12 +6,18 @@ class Stack {
     this.count = 0;
   }
 
-  push() {
-
+  push(value) {
+    this.storage[this.count] = value;
+    this.count++;
   }
 
   pop() {
-
+    if (this.count > 0){
+      this.count--;
+      let returnVal = this.storage[this.count];
+      delete this.storage[this.count];
+      return returnVal;
+    }
   }
 
   size() {
