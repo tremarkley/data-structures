@@ -16,7 +16,7 @@ var Stack = function() {
       let currentIndex = count -1;
       let returnVal = storage[currentIndex];
       count--;
-      storage[currentIndex] = undefined;
+      delete storage[currentIndex];
       return returnVal;
     }
   };
