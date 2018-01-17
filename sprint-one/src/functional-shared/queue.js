@@ -1,9 +1,9 @@
 var Queue = function() {
   var obj = {
-   storage: {},
-   count: 0,
-   currentIndex: 0,
-   lastIndex: 0
+    storage: {},
+    count: 0,
+    currentIndex: 0,
+    lastIndex: 0
   };
   _.extend(obj, queueMethods);
   return obj;
