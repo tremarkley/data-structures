@@ -21,6 +21,7 @@ var queueMethods = {
     if (this.count > 0) {
       this.count--;
       let returnVal = this.storage[this.currentIndex];
+      delete this.storage[this.currentIndex];
       this.currentIndex++;
       return returnVal;
     }
