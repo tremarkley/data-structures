@@ -2,16 +2,22 @@
 
 // Instantiate a new graph
 var Graph = function() {
-debugger
+  //this.edges = {};
+  this.nodes = {};
+  //this.value;
+};
+
+var Node = function(value) {
+  this.value = value;
   this.edges = {};
-  //this.nodes = {};
-  this.value;
 };
 
 // Add a node to the graph, passing in the node's value.
 Graph.prototype.addNode = function(node) {
   //this.nodes[node] = this.edges; // 1: {3 : null, 2 : null}
-  this.value = node;
+  let newNode = new Node(node);
+  //this.value = node;
+  this.nodes
 };
 
 // Return a boolean value indicating if the value passed to contains is represented in the graph.
