@@ -10,6 +10,7 @@ var DoublyLinkedList = function() {
       this.head = newNode;
     } else {
       this.tail.next = newNode;
+      newNode.prev = this.tail;
     }
     this.tail = newNode;
   };
