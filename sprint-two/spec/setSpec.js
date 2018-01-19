@@ -11,6 +11,17 @@ describe('set', function() {
     expect(set.remove).to.be.a('function');
   });
 
+  it('should only add unique values', function() {
+    set.add('Susan Sarandon');
+    set.add('Danny Glover');
+    set.add('Danny Glover');
+    let counter = 0;
+    for (let key in set._storage) {
+      counter++;
+    }
+    expect(counter).to.equal(2);
+  });
+  
   it('should add values to a set', function() {
     set.add('Susan Sarandon');
     set.add('Danny Glover');
