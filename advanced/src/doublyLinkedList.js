@@ -29,8 +29,28 @@ var DoublyLinkedList = function() {
   //time complexity: O(1)
   list.removeHead = function() {
     let previousHead = this.head;
-    this.head = this.head.next;
+    if (this.tail === this.head) {
+      this.head = null;
+      this.tail = null;
+    } else {
+      let newHead = previousHead.next;
+      newHead.prev = null;
+      this.head = newHead;
+    }
     return previousHead.value;
+  };
+
+  list.removeTail = function() {
+    let previousTail = this.tail;
+    if (this.tail === this.head) {
+      this.head = null;
+      this.tail = null;
+    } else {
+      let newTail = previousTail.prev;
+      newTail.next = null;
+      this.tail = newTail;
+    }
+    return previousTail.value;
   };
 
   //time complexity: O(n)
