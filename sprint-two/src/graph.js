@@ -8,7 +8,9 @@ var Graph = function() {
 // time complexity: O(1)
 // Add a node to the graph, passing in the node's value.
 Graph.prototype.addNode = function(node) {
-  this.nodes[node] = {};
+  if (!this.contains(node)) {
+    this.nodes[node] = {};
+  }
 };
 
 // time complexity: O(1)

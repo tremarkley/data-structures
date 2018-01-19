@@ -27,6 +27,14 @@ describe('graph', function() {
     expect(graph.contains(2)).to.equal(false);
   });
 
+  it('should not allow insertion of duplicate nodes', function() {
+    graph.addNode(2);
+    graph.addNode(3);
+    graph.addEdge(3, 2);
+    graph.addNode(2);
+    expect(graph.hasEdge(3, 2)).to.equal(true);
+  });
+
   it('should create edges between two nodes', function() {
     graph.addNode(2);
     graph.addNode(1);
