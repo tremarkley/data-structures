@@ -18,6 +18,19 @@ describe('hashTable', function() {
     expect(hashTable.retrieve('Steven')).to.equal('Seagal');
   });
 
+  it('should store multiple values that were inserted', function() {
+    hashTable.insert('Steven', 'Seagal');
+    expect(hashTable.retrieve('Steven')).to.equal('Seagal');
+    hashTable.insert('Steve', 'Sea');
+    expect(hashTable.retrieve('Steve')).to.equal('Sea');
+    hashTable.insert('James', 'Powers');
+    expect(hashTable.retrieve('James')).to.equal('Powers');
+    hashTable.insert('Harry', 'Markley');
+    expect(hashTable.retrieve('Harry')).to.equal('Markley');
+    hashTable.insert('San', 'Francisco');
+    expect(hashTable.retrieve('San')).to.equal('Francisco');
+  });
+
   it('should not contain values that were not inserted', function() {
     hashTable.insert('Steven', 'Spielberg');
     expect(hashTable.retrieve('Steven')).not.to.equal('Seagal');
