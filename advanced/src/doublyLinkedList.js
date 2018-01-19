@@ -13,6 +13,17 @@ var DoublyLinkedList = function() {
     }
     this.tail = newNode;
   };
+
+  list.addToHead = function(value) {
+    let newNode = Node(value);
+    if (this.tail === null) {
+      this.tail = newNode;
+    } else {
+      this.head.prev = newNode;
+      newNode.next = this.head;
+    }
+    this.head = newNode;
+  };
   
   //time complexity: O(1)
   list.removeHead = function() {
@@ -41,6 +52,7 @@ var Node = function(value) {
 
   node.value = value;
   node.next = null;
+  node.prev = null;
 
   return node;
 };
