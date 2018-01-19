@@ -3,7 +3,7 @@ var Tree = function(value) {
   newTree.value = value;
 
   // your code here
-  newTree.children = [];
+  newTree.children = {};
   newTree.parent = null;
   _.extend(newTree, treeMethods);
 
@@ -13,7 +13,10 @@ var Tree = function(value) {
 var treeMethods = {};
 //time complexity O(1);
 treeMethods.addChild = function(value) {
-  this.children.push(Tree(value));
+  newTree = Tree(value);
+  // this.children.push(newTree);
+  this.children[value] = newTree;
+  newTree.parent = this; 
 };
 //time complexity O(n);
 treeMethods.contains = function(target) {
@@ -23,15 +26,25 @@ treeMethods.contains = function(target) {
     if (node.value === target) {
       returnValue = true;
     } 
-    for (let i = 0; i < node.children.length; i++) {
-      innerFunction(node.children[i]);
+    for (let child in node.children) {
+      innerFunction(node.children[child]);
     }
   };
   innerFunction(this);
   return returnValue;
 };
 
+treeMethods.removeFromParent = function() {
+  delete this.parent.children[this.value];
+  this.parent = null;
+};
 
+treeMethods.traverse = function(cb) {
+  cb(this.value);
+  for (let child in this.children) {
+    this.children[child].traverse(cb);
+  }
+};
 
 /*
  * Complexity: What is the time complexity of the above functions?
