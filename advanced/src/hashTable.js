@@ -24,15 +24,14 @@ var objectIndex = function(storage, k, index) {
 
 HashTable.prototype.checkSize = function() {
   let fullness = Math.floor(this._count / this._limit * 100);
-  if (fullness > this._maxPercentFull) {
+  if (fullness >= this._maxPercentFull) {
     this.resize(true);
-  } else if (fullness < this._maxPercentEmpty && (this._limit / 2) > this._minimumSize) {
+  } else if (fullness <= this._maxPercentEmpty && (this._limit / 2) >= this._minimumSize) {
     this.resize(false);
   }
 };
 //Worst case: O(n)
 HashTable.prototype.insert = function(k, v) {
-  debugger;
   var index = getIndexBelowMaxForKey(k, this._limit);
   let obj = [k, v]; 
   if (this._storage.get(index) === undefined) {
@@ -63,12 +62,9 @@ HashTable.prototype.remove = function(k) {
 };
 
 HashTable.prototype.resize = function(isBigger) {
-  let oldHash = this;
   let tempStorage = [];
-  // oldHash._storage.storage = this._storage.storage.slice();
-  // let newHash = new HashTable();
   this.hashEach(function(tuple) {
-    tempStorage.push([tuple]);
+    tempStorage.push(tuple);
   });
   if (isBigger) {
     this._limit *= 2;
@@ -77,17 +73,11 @@ HashTable.prototype.resize = function(isBigger) {
     this._limit = Math.floor(this._limit / 2);
     this._storage = LimitedArray(this._limit);
   }
-  // oldHash.hashEach(function(tuple) {
-  //   this.insert(tuple[0], tuple[1]);
-  // });
-
-  // oldStorage.each(function(bucket) {
-  //   if (bucket !== undefined) {
-  //     for (let i = 0; i < bucket.length; i++ ) {
-  //       this.insert(bucket[i][0], bucket[i][1]);     
-  //     }
-  //   }
-  // });
+  for (let i = 0; i < tempStorage.length; i++) {
+    //decrease _count to off set insert
+    this._count--;
+    this.insert(tempStorage[i][0], tempStorage[i][1]); 
+  }
 };
 
 HashTable.prototype.hashEach = function(cb) {

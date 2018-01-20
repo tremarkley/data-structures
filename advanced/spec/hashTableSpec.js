@@ -62,6 +62,7 @@ describe('hashTable', function() {
 
   // (Advanced! Remove the extra "x" when you want the following tests to run)
   it ('should double in size when needed', function() {
+//debugger
     _.each(people, function(person) {
       var firstName = person[0];
       var lastName = person[1];
@@ -78,6 +79,7 @@ describe('hashTable', function() {
       hashTable.insert(firstName, lastName);
       expect(hashTable.retrieve(firstName)).to.equal(lastName);
     });
+//debugger
     expect(hashTable._limit).to.equal(16);
     hashTable.remove('George');
     hashTable.remove('Dr.');
