@@ -5,10 +5,11 @@ describe('binarySearchTree', function() {
     binarySearchTree = new BinarySearchTree(5);
   });
 
-  it('should have methods named "insert", "contains", and "depthFirstLog', function() {
+  it('should have methods named "insert", "contains", "breadthFirstLog", and "depthFirstLog', function() {
     expect(binarySearchTree.insert).to.be.a('function');
     expect(binarySearchTree.contains).to.be.a('function');
     expect(binarySearchTree.depthFirstLog).to.be.a('function');
+    expect(binarySearchTree.breadthFirstLog).to.be.a('function');
   });
 
   it('inserted values should be a binarySearchTree', function() {
@@ -45,5 +46,15 @@ describe('binarySearchTree', function() {
     binarySearchTree.insert(7);
     binarySearchTree.depthFirstLog(func);
     expect(array).to.eql([5, 2, 3, 7]);
+  });
+
+  it('should execute a callback on every value in a tree using "breadthFirstLog"', function() {
+    var array = [];
+    var func = function(value) { array.push(value); };
+    binarySearchTree.insert(2);
+    binarySearchTree.insert(3);
+    binarySearchTree.insert(7);
+    binarySearchTree.breadthFirstLog(func);
+    expect(array).to.eql([5, 2, 7, 3]);
   });
 });
