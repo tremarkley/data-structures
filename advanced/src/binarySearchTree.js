@@ -3,6 +3,8 @@ var BinarySearchTree = function(value, level) {
   this.right = undefined;
   this.value = value;
   this.level = level;
+  this.rightDepth = 0;
+  this.leftDepth = 0;
 };
 
 //O(2n)
@@ -11,6 +13,7 @@ BinarySearchTree.prototype.insert = function(value) {
 //debugger
   if (this.value < value) {
     if (this.right !== undefined) { 
+      this.rightDepth++;
       this.right.insert(value);
     } else {
       this.right = new BinarySearchTree(value, this.level + 1);
@@ -36,6 +39,41 @@ BinarySearchTree.prototype.getCount = function() {
   this.breadthFirstLog(incrementCount);
   
   return count;
+};
+
+BinarySearchTree.prototype.rebalance = function() {
+  if (this.left !== undefined && this.left.left !== undefined) {
+    //left-left case
+    let pivot = this.left;
+    this.left = pivot.right; 
+    pivot.right = this;
+  } else if (this.right !== undefined && this.right.right !== undefined) { 
+    //right-right case
+    let pivot = this.right;
+    this.right = pivot.left;
+    pivot.left = this; 
+  } else if (this.left !== undefined && this.left.right !== undefined) { 
+    //left-right case
+    let _root = this.left;
+    let pivot = _root.right;
+    _root.right = pivot.left;
+    pivot.left = _root;
+    //now currently in left-left
+    pivot = this.left;
+    this.left = pivot.right;
+    pivot.right = this;
+    
+  } else if (this.right !== undefined && this.right.left !== undefined) {
+    //right-left case
+    let _root = this.right;
+    let pivot = _root.left;
+    _root.left = pivot.right;
+    pivot.right = _root;
+    //now currently in right-right
+    pivot = this.right;
+    this.right = pivot.left;
+    pivot.left = this;
+  }
 };
 
 //O(n)
