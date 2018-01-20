@@ -2,7 +2,7 @@ describe('binarySearchTree', function() {
   var binarySearchTree;
 
   beforeEach(function() {
-    binarySearchTree = new BinarySearchTree(5);
+    binarySearchTree = new BinarySearchTree(5, 1);
   });
 
   it('should have methods named "insert", "contains", "breadthFirstLog", and "depthFirstLog', function() {
@@ -57,4 +57,34 @@ describe('binarySearchTree', function() {
     binarySearchTree.breadthFirstLog(func);
     expect(array).to.eql([5, 2, 7, 3]);
   });
+
+  it('tree should remember which level it is currently on', function() {
+    binarySearchTree.insert(2);
+    binarySearchTree.insert(3);
+    binarySearchTree.insert(7);
+    binarySearchTree.insert(8);
+    binarySearchTree.insert(4);
+    binarySearchTree.insert(1);
+    binarySearchTree.insert(9);
+    expect(binarySearchTree.right.level).to.equal(2);
+    expect(binarySearchTree.left.level).to.equal(2);
+    expect(binarySearchTree.right.right.level).to.equal(3);
+    expect(binarySearchTree.left.right.level).to.equal(3);
+    expect(binarySearchTree.left.left.level).to.equal(3);
+    expect(binarySearchTree.left.right.right.level).to.equal(4);
+    expect(binarySearchTree.right.right.right.level).to.equal(4);
+  });
+  
+  it('should return a count of the tree when getCount() is called', function() {
+    binarySearchTree.insert(2);
+    binarySearchTree.insert(3);
+    binarySearchTree.insert(7);
+    binarySearchTree.insert(8);
+    binarySearchTree.insert(4);
+    binarySearchTree.insert(1);
+    binarySearchTree.insert(9);
+    expect(binarySearchTree.getCount()).to.eql(8);
+  });
+
+  
 });

@@ -1,26 +1,41 @@
-var BinarySearchTree = function(value) {
+var BinarySearchTree = function(value, level) {
   this.left = undefined;
   this.right = undefined;
   this.value = value;
+  this.level = level;
 };
 
-//O(n)
+//O(2n)
 BinarySearchTree.prototype.insert = function(value) {
-  let newTree = new BinarySearchTree(value);
-  if (this.value < newTree.value) {
+  //give depth value to this
+//debugger
+  if (this.value < value) {
     if (this.right !== undefined) { 
-      this.right.insert(newTree.value);
+      this.right.insert(value);
     } else {
-      this.right = newTree;
+      this.right = new BinarySearchTree(value, this.level + 1);
     }
   } else {
     if (this.left !== undefined) { 
-      this.left.insert(newTree.value);
-
+      this.left.insert(value);
     } else {
-      this.left = newTree;
+      this.left = new BinarySearchTree(value, this.level + 1);
     }
   }
+  // breadthFirstLog();
+  //check depth of this
+};
+
+BinarySearchTree.prototype.getCount = function() {
+  let count = 0;
+
+  var incrementCount = function() {
+    count++;
+  };
+
+  this.breadthFirstLog(incrementCount);
+  
+  return count;
 };
 
 //O(n)
@@ -40,11 +55,15 @@ BinarySearchTree.prototype.depthFirstLog = function(cb) {
   cb(this.value);
   if (this.left !== undefined) {
     this.left.depthFirstLog(cb);
+    //depth++
   } 
   if (this.right !== undefined) {
     this.right.depthFirstLog(cb);
   }
+  // compare to deepest
+  // depth--
 };
+
 
 //O(n)
 BinarySearchTree.prototype.breadthFirstLog = function(cb) {
