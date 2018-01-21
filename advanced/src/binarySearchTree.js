@@ -12,6 +12,7 @@ var BinarySearchTree = function(value, level) {
 BinarySearchTree.prototype.insert = function(value) {
   //give depth value to this
   //debugger
+  var maxDepth = 0;
   var innerFunction = function(node) {
     if (node.value < value) {
       node.rightDepth += 1;
@@ -19,7 +20,9 @@ BinarySearchTree.prototype.insert = function(value) {
         innerFunction(node.right);
       } else {
         node.right = new BinarySearchTree(value, node.level + 1);
+        maxDepth = node.level + 1;
         node.right.parent = node;
+        node.rightDepth += 1;
       }
     } else {
       node.leftDepth += 1;
@@ -27,8 +30,11 @@ BinarySearchTree.prototype.insert = function(value) {
         innerFunction(node.left);
       } else {
         node.left = new BinarySearchTree(value, node.level + 1);
+        maxDepth = node.level + 1;
         node.left.parent = node;
+        node.leftDepth += 1;
       }
+      //node.level
     }
 
     //check 
@@ -128,8 +134,9 @@ BinarySearchTree.prototype.rebalance = function(direction) {
     let pivot = _root.left;
     _root.left = pivot.right;
     pivot.right = _root;
+    this.right = pivot;
     //re-assign parents
-    pivot.parent = _root.parent;
+    pivot.parent = this;
     _root.parent = pivot;
     //now currently in right-right
     pivot = this.right;
@@ -138,11 +145,12 @@ BinarySearchTree.prototype.rebalance = function(direction) {
     //re-assign parents
     pivot.parent = this.parent;
     this.parent = pivot;
+    pivot.parent.right = pivot;
     //reassigning depth
     this.rightDepth -= 2;
-    this.right.left.rightDepth += 1;
-    this.right.left.leftDepth += 1;
-    this.right.leftDepth -= 1;
+    pivot.rightDepth += 1;
+    pivot.leftDepth += 1;
+    _root.leftDepth -= 1;
   }
 };
 
