@@ -1,4 +1,5 @@
 var BinarySearchTree = function(value, level) {
+  this.parent = undefined;
   this.left = undefined;
   this.right = undefined;
   this.value = value;
@@ -10,69 +11,138 @@ var BinarySearchTree = function(value, level) {
 //O(2n)
 BinarySearchTree.prototype.insert = function(value) {
   //give depth value to this
-//debugger
-  if (this.value < value) {
-    if (this.right !== undefined) { 
-      this.rightDepth++;
-      this.right.insert(value);
+  //debugger
+  var innerFunction = function(node) {
+    if (node.value < value) {
+      node.rightDepth += 1;
+      if (node.right !== undefined) { 
+        innerFunction(node.right);
+      } else {
+        node.right = new BinarySearchTree(value, node.level + 1);
+        node.right.parent = node;
+      }
     } else {
-      this.right = new BinarySearchTree(value, this.level + 1);
+      node.leftDepth += 1;
+      if (node.left !== undefined) { 
+        innerFunction(node.left);
+      } else {
+        node.left = new BinarySearchTree(value, node.level + 1);
+        node.left.parent = node;
+      }
     }
-  } else {
-    if (this.left !== undefined) { 
-      this.left.insert(value);
-    } else {
-      this.left = new BinarySearchTree(value, this.level + 1);
+
+    //check 
+    // breadthFirstLog();
+    //check depth of node
+    let difference = node.leftDepth - node.rightDepth;
+    if (difference > 1) {
+      if (node.left.leftDepth - node.left.rightDepth > 0) {
+        //left-left
+        node.rebalance('left-left');
+      } else {
+        //left-right
+        node.rebalance('left-right');
+      }
+    } else if (difference < -1) {
+      if (node.right.rightDepth - node.right.leftDepth > 0) {
+        //right-right
+        node.rebalance('right-right');
+      } else {
+        //right-left
+        node.rebalance('right-left');
+      }
     }
-  }
-  // breadthFirstLog();
-  //check depth of this
-};
-
-BinarySearchTree.prototype.getCount = function() {
-  let count = 0;
-
-  var incrementCount = function() {
-    count++;
   };
 
-  this.breadthFirstLog(incrementCount);
-  
-  return count;
+  innerFunction(this);
+  if (this.parent !== undefined) {
+    return this.parent;  
+  } else {
+    return this;
+  }
+
 };
 
-BinarySearchTree.prototype.rebalance = function() {
-  if (this.left !== undefined && this.left.left !== undefined) {
+// BinarySearchTree.prototype.getCount = function() {
+//   let count = 0;
+
+//   var incrementCount = function() {
+//     count++;
+//   };
+
+//   this.breadthFirstLog(incrementCount);
+  
+//   return count;
+// };
+
+BinarySearchTree.prototype.rebalance = function(direction) {
+  if (direction === 'left-left') {
     //left-left case
     let pivot = this.left;
     this.left = pivot.right; 
     pivot.right = this;
-  } else if (this.right !== undefined && this.right.right !== undefined) { 
+    //changing parents
+    pivot.parent = this.parent;
+    this.parent = pivot;
+    //reassigning depth values
+    pivot.rightDepth += 1;
+    this.leftDepth -= 2; 
+  } else if (direction === 'right-right') { 
     //right-right case
     let pivot = this.right;
     this.right = pivot.left;
-    pivot.left = this; 
-  } else if (this.left !== undefined && this.left.right !== undefined) { 
+    pivot.left = this;
+    //changing parents
+    pivot.parent = this.parent;
+    this.parent = pivot;
+    //reassigning depth values
+    pivot.leftDepth += 1;
+    this.rightDepth -= 2; 
+  } else if (direction === 'left-right') { 
     //left-right case
     let _root = this.left;
-    let pivot = _root.right;
+    let pivot = _root.right; 
     _root.right = pivot.left;
     pivot.left = _root;
+    this.left = pivot;
+    //re-assign parents
+    pivot.parent = this;
+    _root.parent = pivot;
     //now currently in left-left
     pivot = this.left;
     this.left = pivot.right;
     pivot.right = this;
+    //re-assign parents
+    pivot.parent = this.parent;
+    this.parent = pivot;
+    //reassigning depth
+    this.leftDepth -= 2;
+    pivot.leftDepth += 1;
+    pivot.rightDepth += 1;
+    _root.rightDepth -= 1;
     
-  } else if (this.right !== undefined && this.right.left !== undefined) {
+  } else if (direction === 'right-left') {
+    debugger;
     //right-left case
     let _root = this.right;
     let pivot = _root.left;
     _root.left = pivot.right;
     pivot.right = _root;
+    //re-assign parents
+    pivot.parent = _root.parent;
+    _root.parent = pivot;
     //now currently in right-right
     pivot = this.right;
     this.right = pivot.left;
     pivot.left = this;
+    //re-assign parents
+    pivot.parent = this.parent;
+    this.parent = pivot;
+    //reassigning depth
+    this.rightDepth -= 2;
+    this.right.left.rightDepth += 1;
+    this.right.left.leftDepth += 1;
+    this.right.leftDepth -= 1;
   }
 };
 

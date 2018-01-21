@@ -13,10 +13,10 @@ describe('binarySearchTree', function() {
   });
 
   it('inserted values should be a binarySearchTree', function() {
-    binarySearchTree.insert(2);
-    binarySearchTree.insert(3);
-    binarySearchTree.insert(7);
-    binarySearchTree.insert(6);
+    binarySearchTree = binarySearchTree.insert(2);
+    binarySearchTree = binarySearchTree.insert(3);
+    binarySearchTree = binarySearchTree.insert(7);
+    binarySearchTree = binarySearchTree.insert(6);
     expect(binarySearchTree.left.right.constructor).to.equal(binarySearchTree.constructor);
     expect(binarySearchTree.right.left.constructor).to.equal(binarySearchTree.constructor);
   });
@@ -75,16 +75,16 @@ describe('binarySearchTree', function() {
     expect(binarySearchTree.right.right.right.level).to.equal(4);
   });
   
-  it('should return a count of the tree when getCount() is called', function() {
-    binarySearchTree.insert(2);
+  it('tree should rebalance', function() {
+    binarySearchTree.insert(15);
     binarySearchTree.insert(3);
-    binarySearchTree.insert(7);
-    binarySearchTree.insert(8);
-    binarySearchTree.insert(4);
+    binarySearchTree.insert(20);
     binarySearchTree.insert(1);
-    binarySearchTree.insert(9);
-    expect(binarySearchTree.getCount()).to.eql(8);
+    binarySearchTree.insert(2);
+    var array = [];
+    var func = function(value) { array.push(value); };
+    binarySearchTree.breadthFirstLog(func);
+    expect(array).to.eql([5, 2, 15, 1, 3, 20]);
   });
-
   
 });
