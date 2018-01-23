@@ -13,6 +13,7 @@ BinarySearchTree.prototype.insert = function(value) {
   //give depth value to this
   //debugger
   var maxDepth = 0;
+  let insertedLevel = 0;
   var innerFunction = function(node) {
     if (node.value < value) {
       node.rightDepth += 1;
@@ -20,9 +21,9 @@ BinarySearchTree.prototype.insert = function(value) {
         innerFunction(node.right);
       } else {
         node.right = new BinarySearchTree(value, node.level + 1);
+        insertedLevel = node.level + 1;
         maxDepth = node.level + 1;
         node.right.parent = node;
-        node.rightDepth += 1;
       }
     } else {
       node.leftDepth += 1;
@@ -30,32 +31,30 @@ BinarySearchTree.prototype.insert = function(value) {
         innerFunction(node.left);
       } else {
         node.left = new BinarySearchTree(value, node.level + 1);
+        insertedLevel = node.level + 1;
         maxDepth = node.level + 1;
         node.left.parent = node;
-        node.leftDepth += 1;
       }
       //node.level
     }
-
-    //check 
-    // breadthFirstLog();
-    //check depth of node
     let difference = node.leftDepth - node.rightDepth;
-    if (difference > 1) {
-      if (node.left.leftDepth - node.left.rightDepth > 0) {
-        //left-left
-        node.rebalance('left-left');
-      } else {
-        //left-right
-        node.rebalance('left-right');
-      }
-    } else if (difference < -1) {
-      if (node.right.rightDepth - node.right.leftDepth > 0) {
-        //right-right
-        node.rebalance('right-right');
-      } else {
-        //right-left
-        node.rebalance('right-left');
+    if (insertedLevel === node.level + 2) {
+      if (difference > 1) {
+        if (node.left.leftDepth - node.left.rightDepth > 0) {
+          //left-left
+          node.rebalance('left-left');
+        } else {
+          //left-right
+          node.rebalance('left-right');
+        }
+      } else if (difference < -1) {
+        if (node.right.rightDepth - node.right.leftDepth > 0) {
+          //right-right
+          node.rebalance('right-right');
+        } else {
+          //right-left
+          node.rebalance('right-left');
+        }
       }
     }
   };
@@ -69,19 +68,8 @@ BinarySearchTree.prototype.insert = function(value) {
 
 };
 
-// BinarySearchTree.prototype.getCount = function() {
-//   let count = 0;
-
-//   var incrementCount = function() {
-//     count++;
-//   };
-
-//   this.breadthFirstLog(incrementCount);
-  
-//   return count;
-// };
-
 BinarySearchTree.prototype.rebalance = function(direction) {
+  debugger
   if (direction === 'left-left') {
     //left-left case
     let pivot = this.left;
@@ -89,8 +77,18 @@ BinarySearchTree.prototype.rebalance = function(direction) {
     pivot.right = this;
     //changing parents
     pivot.parent = this.parent;
-    this.parent = pivot;
+    if (pivot.parent != undefined) {
+      if (pivot.value > pivot.parent.value) {
+        pivot.parent.right = pivot;
+      }
+      else {
+        pivot.parent.left = pivot;
+      }
+    }
     //reassigning depth values
+    pivot.level -= 1;
+    pivot.left.level -= 1;
+    this.level += 1;
     pivot.rightDepth += 1;
     this.leftDepth -= 2; 
   } else if (direction === 'right-right') { 
@@ -100,8 +98,18 @@ BinarySearchTree.prototype.rebalance = function(direction) {
     pivot.left = this;
     //changing parents
     pivot.parent = this.parent;
-    this.parent = pivot;
+    if (pivot.parent != undefined) {
+      if (pivot.value > pivot.parent.value) {
+        pivot.parent.right = pivot;
+      }
+      else {
+        pivot.parent.left = pivot;
+      }
+    }
     //reassigning depth values
+    pivot.level -= 1;
+    pivot.right.level -= 1;
+    this.level += 1;
     pivot.leftDepth += 1;
     this.rightDepth -= 2; 
   } else if (direction === 'left-right') { 
@@ -112,6 +120,8 @@ BinarySearchTree.prototype.rebalance = function(direction) {
     pivot.left = _root;
     this.left = pivot;
     //re-assign parents
+    pivot.level -= 1;
+    _root.level += 1;
     pivot.parent = this;
     _root.parent = pivot;
     //now currently in left-left
@@ -120,15 +130,24 @@ BinarySearchTree.prototype.rebalance = function(direction) {
     pivot.right = this;
     //re-assign parents
     pivot.parent = this.parent;
+    if (this.parent != undefined) {
+      if (pivot.value > this.parent.value) {
+        this.parent.right = pivot;
+      }
+      else {
+        this.parent.left = pivot;
+      }
+    }
     this.parent = pivot;
     //reassigning depth
+    this.level += 1;
+    pivot.level -= 1;
     this.leftDepth -= 2;
     pivot.leftDepth += 1;
     pivot.rightDepth += 1;
     _root.rightDepth -= 1;
     
   } else if (direction === 'right-left') {
-    debugger;
     //right-left case
     let _root = this.right;
     let pivot = _root.left;
@@ -136,6 +155,8 @@ BinarySearchTree.prototype.rebalance = function(direction) {
     pivot.right = _root;
     this.right = pivot;
     //re-assign parents
+    pivot.level -= 1;
+    _root.level += 1;
     pivot.parent = this;
     _root.parent = pivot;
     //now currently in right-right
@@ -144,9 +165,19 @@ BinarySearchTree.prototype.rebalance = function(direction) {
     pivot.left = this;
     //re-assign parents
     pivot.parent = this.parent;
+    if (this.parent != undefined) {
+      if (pivot.value > this.parent.value) {
+        this.parent.right = pivot;
+      }
+      else {
+        this.parent.left = pivot;
+      }
+    }
     this.parent = pivot;
-    pivot.parent.right = pivot;
+    //pivot.parent.right = pivot;
     //reassigning depth
+    this.level += 1;
+    pivot.level -= 1;
     this.rightDepth -= 2;
     pivot.rightDepth += 1;
     pivot.leftDepth += 1;
